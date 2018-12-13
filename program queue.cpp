@@ -1,121 +1,94 @@
 #include <iostream>
 #include <conio.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 
-using namespace std;
+ using namespace std;
+ 
+ struct simpul{
+    char nama[50],posisi[50];
+    int no;
+    simpul *next;
+}*depan=NULL,*belakang=NULL,*temp=NULL;
+ class Queue{
+public:
+    void enQueue(int no,char nama[],char posisi[]);
+    void deQueue();
+    void displayQueue();
+};
 
-int pilih;
-int tambah_pilihan();
-int tambah_belakang();
-int hapus_belakang();
-int tampil();
-
-
-
-struct tumpuk
-{
-   char nama[35], posisi[20];
-  int no_punggung;
-   struct tumpuk *next;
-} *baru, *awal=NULL, *akhir=NULL,*hapus,*temp;
-
-int main()
-{
-   do
-   {
-     cout <<"---------------------------------------"<<'\n';
-     cout << "	QUEUE MENGGUNAKAN LINKED LIST" << '\n';
-     cout <<"---------------------------------------"<<'\n';
-     cout <<" "<<'\n';
-     cout << "1. Enqueue" << '\n';
-     cout << "2. Dequeue" << '\n';
-     cout << "3. Tampil" << '\n';
-     cout << "4. Exit" << '\n';
-     cout << "Pilih (1-4) : ";
-     cin>>pilih;
-     tambah_pilihan();
-   }while(pilih!=4);
-  return 0;
+void Queue::enQueue(int no, char nama[], char posisi[]){
+    temp = new simpul;
+    temp->no = no;
+    strcpy(temp->nama,nama);
+    strcpy(temp->posisi,posisi);
+    temp->next = NULL;
+    if(depan == NULL){
+        depan = temp;
+        belakang = temp;
+    } else{
+        belakang->next = temp;
+        belakang =temp;
+    }
 }
 
-int tambah_pilihan()
-{
-   if(pilih==1)
-       tambah_belakang();
-   else if(pilih==2)
-       hapus_belakang();
-   else if(pilih==3)
-       tampil();
-   else
-       return 0;
+ void Queue::deQueue() {
+    if (depan==NULL){
+        cout<<"Queue Empty"<<endl;
+    } else{
+        temp = depan;
+        depan=depan->next;
+        delete temp;
+    }
 }
 
-int tambah_belakang()
-{
-   baru=(tumpuk*)malloc(sizeof(struct tumpuk));
-   cout<<"Data pemain bola"<<endl;
-   cout<<"---------------------"<<endl;
-   cin.ignore();
-   cout<<"No Punggung   : ";
-   cin>>baru->no_punggung;
-   cin.ignore();
-   cout<<"Nama  : ";
-   cin.getline(baru->nama,35);
-   cout<<"Posisi  : ";
-   cin.getline(baru->posisi,20);
- cin.ignore();
-   baru->next=NULL;
-   if(awal==NULL)
-   {
-       awal=baru;
-   }
-   else
-   {
-       akhir->next=baru;
-   }
-   akhir=baru;
-   akhir->next=NULL;
-   cout<<endl<<endl;
-
+void Queue::displayQueue() {
+    if(depan==NULL){
+        cout<<"Queue Empty"<<endl;
+        return;
+    }
+    for (temp = depan; temp !=NULL ; temp=temp->next){
+        cout<<temp->no<<"->"<<temp->nama<<"->"<<temp->posisi<<endl;
+    }
 }
 
-int hapus_belakang()
-{
-   if (awal==NULL)
-       cout<<"Kosong"<<endl;
-   else if(awal==akhir)
-   {
-        hapus=awal;
-        awal=awal->next;
-    
-   }
-   else
-   {
-       hapus=awal;
-       while(hapus->next!=akhir)
-            hapus=hapus->next;
-       akhir=hapus;
-       hapus=akhir->next;
-       akhir->next=NULL;
-   
-   }
-   cout<<endl<<endl;
-
-}
-
-int tampil()
-{
-    if (awal==NULL)
-         cout<<"Kosong"<<endl;
-    else
-    {
-        temp=awal;
-        while(temp!=NULL)
-        {
-           	cout<<temp->no_punggung<<" -> "<<temp->nama<<" -> "<<temp->posisi<<endl;
-           temp=temp->next;
+int main() {
+    Queue queue;
+    int pilih;
+    while (true){
+        cout<<"-------------------"<<endl;
+        cout<<"	|QUEUE|"<<endl;
+        cout<<"-------------------"<<endl;
+        cout<<"1. EnQueue"<<endl;
+        cout<<"2. DeQueue"<<endl;
+        cout<<"3. Display Queue"<<endl;
+        cout<<"4. Exit"<<endl;
+        cout<<"Masukkan Pilihan : ";cin>>pilih;
+        switch (pilih){
+            case 1: {
+                simpul node;
+                cout<<endl;
+                cout << "Data Pemain Sepak Bola"<< endl;
+                cout << "----------------------" << endl;
+                cout << "Masukkan Nomor Punggung : ";
+                cin>>node.no;
+                cout << "Masukkan Nama Pemain    : ";
+                cin.ignore(1);
+                cin.getline(node.nama,50);
+                cout << "Masukkan Posisi Pemain  : ";
+                cin.getline(node.posisi,50);
+                queue.enQueue(node.no, node.nama, node.posisi);
+                break;
+            }
+            case 2:
+                queue.deQueue();
+                break;
+            case 3:
+                queue.displayQueue();
+                break;
+            case 4:
+                exit(0);
+            default:
+                cout<<"Out of Range";
         }
     }
-    getch();
 }
